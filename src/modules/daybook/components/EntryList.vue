@@ -5,12 +5,13 @@
                 type="text"
                 class="form-control"
                 placeholder="Buscar entrada"
+                v-model="term"
             />
         </div>
 
         <div class="entry-scrollarea">
             <MyEntry
-                v-for="item in 100"
+                v-for="item in entriesByTerm"
                 :key="item"
             />
         </div>
@@ -21,9 +22,23 @@
 <script>
 
     import { defineAsyncComponent } from 'vue';
+    import { mapGetters } from 'vuex';
+
     export default {
         components: {
-            MyEntry: defineAsyncComponent(() => import('./MyEntry.vue'))
+            MyEntry: defineAsyncComponent(() => import('./MyEntry.vue')),
+        },
+        computed: {
+            //Ponemos primero el nombre del módulo, y luego del método que queremos llamar, y podemos llamarlo directamente
+            ...mapGetters('journal', ['getEntriesByTerm']),
+            entriesByTerm() {
+                return this.getEntriesByTerm(this.term)
+            }
+        },
+        data () {
+            return {
+                term: ''
+            }
         }
     }
 
